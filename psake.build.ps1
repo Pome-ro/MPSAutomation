@@ -31,12 +31,19 @@ task Clean {
 task Build -depends Clean {
     $PrivateFunctions = Get-ChildItem ".\SRC\Functions\Private"
     $PublicFunctions = Get-ChildItem ".\SRC\Functions\Public"
+    $Classes = Get-ChildItem ".\SRC\Classes\"
     $FunctionsToExport = $PublicFunctions.BaseName
 
     Update-ModuleManifest -Path ".\SRC\$ModuleName.psd1" -FunctionsToExport $FunctionsToExport
 
     Copy-Item -Path ".\SRC\$ModuleName.psd1" -Destination $ModulePath
     Copy-Item -Path ".\SRC\$ModuleName.psm1" -Destination $ModulePath
+    
+    # Export Classes
+    foreach ($Class in $Classes) {
+        $Content = Get-Content -Path $Class.FullName
+        Add-Content -Value $content -Path "$ModulePath\$ModuleName.psm1"
+    }
     
     # Export Private Functions
     foreach ($PrivateFunction in $PrivateFunctions) {
