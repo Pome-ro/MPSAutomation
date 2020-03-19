@@ -29,7 +29,7 @@ function Get-MPSASectionRoster {
             $Students = $tables.schedules | Where-Object {$_.Course_Number -eq $obj.Course_Number -and $_.Section_Number -eq $obj.Section_Number}
             $RosterIDs = $Students.StudentID
             $Roster = foreach ($StudentID in $RosterIDs) {
-                $Student = Get-Student -Filter {$_.ID -eq $StudentID} -Datablob $data
+                $Student = Get-MPSAStudent -Filter {$_.ID -eq $StudentID} -Datablob $data
                 $Student
             }
             
